@@ -116,6 +116,13 @@ func (e *SearchService) format(format format) *SearchService {
 	return e
 }
 
+func (e *SearchService) fetchAddressDetails(enable bool) *SearchService {
+	if enable {
+		e.query["addressdetails"] = 1
+	}
+	return e
+}
+
 func (e *SearchService) Latitude(latitude float64) *SearchService {
 	e.query["lat"] = latitude
 	return e
@@ -173,11 +180,14 @@ func (e *SearchService) Body(body []byte) *SearchService {
 
 func (e *SearchService) Search() (SearchResponse, error) {
 	e.operation = operationSearch
+
 	return e.execute()
 }
 
 func (e *SearchService) Reverse() (SearchResponse, error) {
 	e.operation = operationReverse
+	e.fetchAddressDetails(true)
+
 	return e.execute()
 }
 
