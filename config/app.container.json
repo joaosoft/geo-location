@@ -1,0 +1,18 @@
+{
+  "geo-location": {
+    "api": "https://nominatim.openstreetmap.org",
+    "log": {
+      "level": "error"
+    }
+  },
+  "manager": {
+    "log": {
+      "level": "error"
+    }
+  },
+  "client": {
+    "log": {
+      "level": "error"
+    }
+  }
+}
