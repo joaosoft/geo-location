@@ -19,8 +19,8 @@ const (
 type SearchResponse []*Place
 
 type Place struct {
-	Latitude    string   `json:"latitude"`
-	Longitude   string   `json:"longitude"`
+	Latitude    float64  `json:"latitude"`
+	Longitude   float64  `json:"longitude"`
 	Name        string   `json:"name"`
 	Category    string   `json:"category"`
 	Type        string   `json:"type"`
@@ -99,7 +99,7 @@ type SearchService struct {
 	operation string
 }
 
-func NewSearchService(service *GeoLocation) *SearchService {
+func newSearchService(service *GeoLocation) *SearchService {
 	searchService := &SearchService{
 		service: service,
 		method:  web.MethodGet,
@@ -220,16 +220,21 @@ func (e *SearchService) execute() (SearchResponse, error) {
 			return nil, errors.New(errors.ErrorLevel, 0, err)
 		}
 
+		var latitude, longitude float64
 		for _, place := range apiResponse {
+			latitude, _ = strconv.ParseFloat(place.Lat, 64)
+			longitude, _ = strconv.ParseFloat(place.Lon, 64)
+
 			places = append(places, &Place{
-				Latitude:    place.Lat,
-				Longitude:   place.Lon,
+				Latitude:    latitude,
+				Longitude:   longitude,
 				Name:        place.DisplayName,
 				Category:    place.Category,
 				Type:        place.Type,
 				PlaceRank:   place.PlaceRank,
 				Importance:  place.Importance,
 				BoundingBox: place.Boundingbox,
+				Address:     &Address{},
 			})
 		}
 	case operationReverse:
@@ -241,9 +246,12 @@ func (e *SearchService) execute() (SearchResponse, error) {
 		}
 
 		importance, _ := strconv.ParseFloat(apiResponse.Importance, 64)
+		latitude, _ := strconv.ParseFloat(apiResponse.Lat, 64)
+		longitude, _ := strconv.ParseFloat(apiResponse.Lon, 64)
+
 		places = append(places, &Place{
-			Latitude:    apiResponse.Lat,
-			Longitude:   apiResponse.Lon,
+			Latitude:    latitude,
+			Longitude:   longitude,
 			Name:        apiResponse.Name,
 			Category:    apiResponse.Category,
 			Type:        apiResponse.Type,

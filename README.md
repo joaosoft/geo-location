@@ -39,7 +39,7 @@ func main() {
 }
 
 func search(street string) {
-	result, err := geo.Search().
+	result, err := geo.NewSearch().
 		Street(street).
 		Search()
 
@@ -51,7 +51,7 @@ func search(street string) {
 }
 
 func reverse(latitude float64, longitude float64) {
-	result, err := geo.Search().
+	result, err := geo.NewSearch().
 		Latitude(latitude).
 		Longitude(longitude).
 		Reverse()

@@ -21,10 +21,10 @@ type GeoLocationConfig struct {
 	Api string `json:"api"`
 }
 
-// NewConfig ...
-func NewConfig(config ...interface{}) (*AppConfig, manager.IConfig, error) {
+// newConfig ...
+func newConfig(config ...interface{}) (*AppConfig, manager.IConfig, error) {
 	appConfig := &AppConfig{}
-	simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", GetEnv()), appConfig)
+	simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", getEnv()), appConfig)
 
 	if appConfig.GeoLocation == nil {
 		appConfig.GeoLocation = &GeoLocationConfig{}

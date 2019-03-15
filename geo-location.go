@@ -19,7 +19,7 @@ type GeoLocation struct {
 
 // NewGeoLocation ...
 func NewGeoLocation(options ...GeoLocationOption) (*GeoLocation, error) {
-	config, simpleConfig, err := NewConfig()
+	config, simpleConfig, err := newConfig()
 	webClient, err := web.NewClient()
 	if err != nil {
 		return nil, err
@@ -50,6 +50,6 @@ func NewGeoLocation(options ...GeoLocationOption) (*GeoLocation, error) {
 	return service, nil
 }
 
-func (e *GeoLocation) Search() *SearchService {
-	return NewSearchService(e)
+func (e *GeoLocation) NewSearch() *SearchService {
+	return newSearchService(e)
 }
