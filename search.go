@@ -183,13 +183,13 @@ func (e *SearchService) Body(body []byte) *SearchService {
 
 func (e *SearchService) Search() (SearchResponse, error) {
 	e.operation = operationSearch
+	e.fetchAddressDetails(true)
 
 	return e.execute()
 }
 
 func (e *SearchService) Reverse() (SearchResponse, error) {
 	e.operation = operationReverse
-	e.fetchAddressDetails(true)
 
 	return e.execute()
 }
@@ -238,16 +238,9 @@ func (e *SearchService) execute() (SearchResponse, error) {
 			latitude, _ = strconv.ParseFloat(place.Lat, 64)
 			longitude, _ = strconv.ParseFloat(place.Lon, 64)
 
-			places = append(places, &Place{
-				Latitude:    latitude,
-				Longitude:   longitude,
-				Name:        place.DisplayName,
-				Category:    place.Category,
-				Type:        place.Type,
-				PlaceRank:   place.PlaceRank,
-				Importance:  place.Importance,
-				BoundingBox: place.Boundingbox,
-				Address: &Address{
+			var address *Address
+			if place.Address != nil {
+				address = &Address{
 					Road:          place.Address.Road,
 					Neighbourhood: place.Address.Neighbourhood,
 					Suburb:        place.Address.Suburb,
@@ -258,7 +251,18 @@ func (e *SearchService) execute() (SearchResponse, error) {
 					Country:       place.Address.Country,
 					CountryCode2A: strings.ToUpper(place.Address.CountryCode),
 					CountryCode3A: strings.ToUpper(place.Address.Country),
-				},
+				}
+			}
+			places = append(places, &Place{
+				Latitude:    latitude,
+				Longitude:   longitude,
+				Name:        place.DisplayName,
+				Category:    place.Category,
+				Type:        place.Type,
+				PlaceRank:   place.PlaceRank,
+				Importance:  place.Importance,
+				BoundingBox: place.Boundingbox,
+				Address:     address,
 			})
 		}
 	case operationReverse:
@@ -273,16 +277,9 @@ func (e *SearchService) execute() (SearchResponse, error) {
 		latitude, _ := strconv.ParseFloat(apiResponse.Lat, 64)
 		longitude, _ := strconv.ParseFloat(apiResponse.Lon, 64)
 
-		places = append(places, &Place{
-			Latitude:    latitude,
-			Longitude:   longitude,
-			Name:        apiResponse.Name,
-			Category:    apiResponse.Category,
-			Type:        apiResponse.Type,
-			PlaceRank:   apiResponse.PlaceRank,
-			Importance:  importance,
-			AddressType: apiResponse.AddressType,
-			Address: &Address{
+		var address *Address
+		if apiResponse.Address != nil {
+			address = &Address{
 				Road:          apiResponse.Address.Road,
 				Neighbourhood: apiResponse.Address.Neighbourhood,
 				Suburb:        apiResponse.Address.Suburb,
@@ -293,7 +290,19 @@ func (e *SearchService) execute() (SearchResponse, error) {
 				Country:       apiResponse.Address.Country,
 				CountryCode2A: strings.ToUpper(apiResponse.Address.CountryCode),
 				CountryCode3A: strings.ToUpper(apiResponse.Address.Country),
-			},
+			}
+		}
+
+		places = append(places, &Place{
+			Latitude:    latitude,
+			Longitude:   longitude,
+			Name:        apiResponse.Name,
+			Category:    apiResponse.Category,
+			Type:        apiResponse.Type,
+			PlaceRank:   apiResponse.PlaceRank,
+			Importance:  importance,
+			AddressType: apiResponse.AddressType,
+			Address:     address,
 			BoundingBox: apiResponse.Boundingbox,
 		})
 	default:
