@@ -48,47 +48,50 @@ type openStreetMapSearchResponse []openStreetMapPlaceSearch
 type openStreetMapReverseResponse openStreetMapPlaceReverse
 
 type openStreetMapPlaceSearch struct {
-	PlaceID     int      `json:"place_id"`
-	Licence     string   `json:"licence"`
-	OsmType     string   `json:"osm_type"`
-	OsmID       int      `json:"osm_id"`
-	Lat         string   `json:"lat"`
-	Lon         string   `json:"lon"`
-	DisplayName string   `json:"display_name"`
-	PlaceRank   int      `json:"place_rank"`
-	Category    string   `json:"category"`
-	Type        string   `json:"type"`
-	Importance  float64  `json:"importance"`
-	Boundingbox []string `json:"boundingbox"`
+	PlaceID     int                   `json:"place_id"`
+	Licence     string                `json:"licence"`
+	OsmType     string                `json:"osm_type"`
+	OsmID       int                   `json:"osm_id"`
+	Lat         string                `json:"lat"`
+	Lon         string                `json:"lon"`
+	DisplayName string                `json:"display_name"`
+	PlaceRank   int                   `json:"place_rank"`
+	Category    string                `json:"category"`
+	Type        string                `json:"type"`
+	Importance  float64               `json:"importance"`
+	Address     *openStreetMapAddress `json:"address,omitempty"`
+	Boundingbox []string              `json:"boundingbox"`
 }
 
 type openStreetMapPlaceReverse struct {
-	PlaceID     int    `json:"place_id"`
-	Licence     string `json:"licence"`
-	OsmType     string `json:"osm_type"`
-	OsmID       int    `json:"osm_id"`
-	Lat         string `json:"lat"`
-	Lon         string `json:"lon"`
-	Name        string `json:"name"`
-	DisplayName string `json:"display_name"`
-	PlaceRank   int    `json:"place_rank"`
-	Category    string `json:"category"`
-	Type        string `json:"type"`
-	Importance  string `json:"importance"`
-	AddressType string `json:"addresstype"`
-	Address     struct {
-		Road          string `json:"road"`
-		Neighbourhood string `json:"neighbourhood"`
-		Suburb        string `json:"suburb"`
-		City          string `json:"city"`
-		County        string `json:"county"`
-		StateDistrict string `json:"state_district"`
-		State         string `json:"state"`
-		Postcode      string `json:"postcode"`
-		Country       string `json:"country"`
-		CountryCode   string `json:"country_code"`
-	} `json:"address,omitempty"`
-	Boundingbox []string `json:"boundingbox"`
+	PlaceID     int                   `json:"place_id"`
+	Licence     string                `json:"licence"`
+	OsmType     string                `json:"osm_type"`
+	OsmID       int                   `json:"osm_id"`
+	Lat         string                `json:"lat"`
+	Lon         string                `json:"lon"`
+	Name        string                `json:"name"`
+	DisplayName string                `json:"display_name"`
+	PlaceRank   int                   `json:"place_rank"`
+	Category    string                `json:"category"`
+	Type        string                `json:"type"`
+	Importance  string                `json:"importance"`
+	AddressType string                `json:"addresstype"`
+	Address     *openStreetMapAddress `json:"address,omitempty"`
+	Boundingbox []string              `json:"boundingbox"`
+}
+
+type openStreetMapAddress struct {
+	Road          string `json:"road"`
+	Neighbourhood string `json:"neighbourhood"`
+	Suburb        string `json:"suburb"`
+	City          string `json:"city"`
+	County        string `json:"county"`
+	StateDistrict string `json:"state_district"`
+	State         string `json:"state"`
+	Postcode      string `json:"postcode"`
+	Country       string `json:"country"`
+	CountryCode   string `json:"country_code"`
 }
 
 type SearchService struct {
@@ -244,6 +247,18 @@ func (e *SearchService) execute() (SearchResponse, error) {
 				PlaceRank:   place.PlaceRank,
 				Importance:  place.Importance,
 				BoundingBox: place.Boundingbox,
+				Address: &Address{
+					Road:          place.Address.Road,
+					Neighbourhood: place.Address.Neighbourhood,
+					Suburb:        place.Address.Suburb,
+					City:          place.Address.City,
+					StateDistrict: place.Address.StateDistrict,
+					State:         place.Address.State,
+					Postcode:      place.Address.Postcode,
+					Country:       place.Address.Country,
+					CountryCode2A: strings.ToUpper(place.Address.CountryCode),
+					CountryCode3A: strings.ToUpper(place.Address.Country),
+				},
 			})
 		}
 	case operationReverse:
