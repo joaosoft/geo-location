@@ -234,7 +234,6 @@ func (e *SearchService) execute() (SearchResponse, error) {
 				PlaceRank:   place.PlaceRank,
 				Importance:  place.Importance,
 				BoundingBox: place.Boundingbox,
-				Address:     &Address{},
 			})
 		}
 	case operationReverse:
