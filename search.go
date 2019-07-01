@@ -75,7 +75,7 @@ type openStreetMapPlaceReverse struct {
 	PlaceRank   int                   `json:"place_rank"`
 	Category    string                `json:"category"`
 	Type        string                `json:"type"`
-	Importance  string                `json:"importance"`
+	Importance  float64               `json:"importance"`
 	AddressType string                `json:"addresstype"`
 	Address     *openStreetMapAddress `json:"address,omitempty"`
 	Boundingbox []string              `json:"boundingbox"`
@@ -273,7 +273,6 @@ func (e *SearchService) execute() (SearchResponse, error) {
 			return nil, errors.New(errors.ErrorLevel, 0, err)
 		}
 
-		importance, _ := strconv.ParseFloat(apiResponse.Importance, 64)
 		latitude, _ := strconv.ParseFloat(apiResponse.Lat, 64)
 		longitude, _ := strconv.ParseFloat(apiResponse.Lon, 64)
 
@@ -300,7 +299,7 @@ func (e *SearchService) execute() (SearchResponse, error) {
 			Category:    apiResponse.Category,
 			Type:        apiResponse.Type,
 			PlaceRank:   apiResponse.PlaceRank,
-			Importance:  importance,
+			Importance:  apiResponse.Importance,
 			AddressType: apiResponse.AddressType,
 			Address:     address,
 			BoundingBox: apiResponse.Boundingbox,
