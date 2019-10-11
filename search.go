@@ -212,7 +212,7 @@ func (e *SearchService) execute() (SearchResponse, error) {
 		addSeparator = true
 	}
 
-	request, err := e.service.webClient.NewRequest(e.method, fmt.Sprintf("%s/%s%s", e.service.config.Api, e.operation, query))
+	request, err := e.service.webClient.NewRequest(e.method, fmt.Sprintf("%s/%s%s", e.service.config.Api, e.operation, query), web.ContentTypeApplicationJSON, nil)
 	if err != nil {
 		return nil, errors.New(errors.ErrorLevel, 0, err)
 	}
