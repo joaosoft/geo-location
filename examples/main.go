@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"geo-location"
+	"github.com/joaosoft/geo-location"
 )
 
 var geo, _ = geolocation.NewGeoLocation()
