@@ -214,12 +214,12 @@ func (e *SearchService) execute() (SearchResponse, error) {
 
 	request, err := e.service.webClient.NewRequest(e.method, fmt.Sprintf("%s/%s%s", e.service.config.Api, e.operation, query), web.ContentTypeApplicationJSON, nil)
 	if err != nil {
-		return nil, errors.New(errors.ErrorLevel, 0, err)
+		return nil, errors.New(errors.LevelError, 0, err)
 	}
 
 	response, err := request.Send()
 	if err != nil {
-		return nil, errors.New(errors.ErrorLevel, 0, err)
+		return nil, errors.New(errors.LevelError, 0, err)
 	}
 
 	places := make(SearchResponse, 0)
@@ -230,7 +230,7 @@ func (e *SearchService) execute() (SearchResponse, error) {
 
 		if err := json.Unmarshal(response.Body, &apiResponse); err != nil {
 			e.service.logger.Error(err)
-			return nil, errors.New(errors.ErrorLevel, 0, err)
+			return nil, errors.New(errors.LevelError, 0, err)
 		}
 
 		var latitude, longitude float64
@@ -270,7 +270,7 @@ func (e *SearchService) execute() (SearchResponse, error) {
 
 		if err := json.Unmarshal(response.Body, &apiResponse); err != nil {
 			e.service.logger.Error(err)
-			return nil, errors.New(errors.ErrorLevel, 0, err)
+			return nil, errors.New(errors.LevelError, 0, err)
 		}
 
 		latitude, _ := strconv.ParseFloat(apiResponse.Lat, 64)
